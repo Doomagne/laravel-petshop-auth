@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - Doomeng's Pet Shop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <style>
         * {
             margin: 0;
@@ -244,23 +245,30 @@
         }
     </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="logo">
-                <span>🐾</span> Doomeng
+<body class="antialiased">
+    @if(request()->is('login') || request()->is('register') || request()->is('register-admin'))
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; flex-direction: column;">
+            <nav class="navbar">
+                <div class="navbar-content">
+                    <div class="logo">
+                        <span>🐾</span> Doomeng
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="#">Shop</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="container">
+                @yield('content')
             </div>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Shop</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
         </div>
-    </nav>
-
-    <div class="container">
-        @yield('content')
-    </div>
+    @else
+        <div class="antialiased bg-gray-100 text-gray-800">
+            @yield('content')
+        </div>
+    @endif
 </body>
 </html>

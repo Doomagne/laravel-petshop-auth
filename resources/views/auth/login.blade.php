@@ -15,7 +15,24 @@
             <p>Enter your information here to access your account</p>
         </div>
 
-        <form action="{{ url('/login') }}" method="POST">
+        @if ($errors->any())
+            <div style="background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border: 1px solid #f5c6cb;">
+                <strong>Please fix the following errors:</strong>
+                <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div style="background: #d4edda; color: #155724; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border: 1px solid #c3e6cb;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <form action="{{ route('login.submit') }}" method="POST">
             @csrf
             
             <div class="form-group">
@@ -24,10 +41,15 @@
                     type="email" 
                     id="email" 
                     name="email" 
+                    value="{{ old('email') }}"
                     placeholder="you@example.com" 
                     required
                     autocomplete="email"
+                    class="{{ $errors->has('email') ? 'error' : '' }}"
                 >
+                @error('email')
+                    <span style="color: #e74c3c; font-size: 0.85rem; margin-top: 0.25rem; display: block;">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-group">
@@ -39,7 +61,11 @@
                     placeholder="Enter your password" 
                     required
                     autocomplete="current-password"
+                    class="{{ $errors->has('password') ? 'error' : '' }}"
                 >
+                @error('password')
+                    <span style="color: #e74c3c; font-size: 0.85rem; margin-top: 0.25rem; display: block;">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
