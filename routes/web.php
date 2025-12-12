@@ -38,4 +38,9 @@ Route::middleware('auth')->group(function () {
 // Admin routes (protected by auth and admin middleware)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+    Route::resource('dogs', \App\Http\Controllers\Admin\DogController::class);
+     Route::post('dogs/{dog}/remove-gallery', 
+        [\App\Http\Controllers\Admin\DogController::class, 'removeGalleryImage']
+    )->name('dogs.removeGalleryImage');
 });

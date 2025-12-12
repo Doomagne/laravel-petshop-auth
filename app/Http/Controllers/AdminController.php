@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Dog;
+use App\Models\DogBreed;
 
 class AdminController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * Protect all admin routes.
      */
     public function __construct()
     {
@@ -18,14 +18,13 @@ class AdminController extends Controller
 
     /**
      * Display the admin dashboard.
-     *
-     * @return \Illuminate\View\View
      */
     public function index()
     {
-        return view('admin.dashboard');
+        // Load dogs and dog breeds for the dashboard
+        $dogs = Dog::with('breed')->orderBy('created_at', 'desc')->paginate(10);
+        $breeds = DogBreed::orderBy('name')->get();
+
+        return view('admin.dashboard', compact('dogs', 'breeds'));
     }
 }
-
-
-
