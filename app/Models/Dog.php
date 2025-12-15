@@ -10,7 +10,7 @@ class Dog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'breed_id','name','slug','age_months','gender','color','size',
+        'breed_id','mix_breed_id','is_mix','name','slug','age_months','gender','color','size',
         'description','main_image','gallery','vaccinated','sterilized','status','location'
     ];
 
@@ -34,6 +34,11 @@ class Dog extends Model
         return $this->belongsTo(DogBreed::class, 'breed_id');
     }
 
+    public function mixBreed()
+    {
+        return $this->belongsTo(DogBreed::class, 'mix_breed_id');
+    }
+
     // URL helpers
     public function getMainImageUrlAttribute()
     {
@@ -44,6 +49,17 @@ class Dog extends Model
     {
         if (! $this->gallery) return [];
         return collect($this->gallery)->map(fn($p) => asset('storage/' . $p))->all();
+    }
+
+    public function getBreedLabelAttribute(): string
+    {
+        if ($this->is_mix && $this->breed && $this->mixBreed) {
+            return $this->breed->name . ' / ' . $this->mixBreed->name;
+        }
+        if ($this->breed) {
+            return $this->breed->name;
+        }
+        return 'N/A';
     }
 
     public function getAgeLabelAttribute()

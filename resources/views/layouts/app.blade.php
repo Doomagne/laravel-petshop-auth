@@ -270,5 +270,6 @@
             @yield('content')
         </div>
     @endif
+    @yield('scripts')
 </body>
 </html>

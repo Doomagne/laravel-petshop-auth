@@ -40,6 +40,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
     Route::resource('dogs', \App\Http\Controllers\Admin\DogController::class);
+    Route::resource('breeds', \App\Http\Controllers\Admin\DogBreedController::class)->except(['show','create','edit']);
      Route::post('dogs/{dog}/remove-gallery', 
         [\App\Http\Controllers\Admin\DogController::class, 'removeGalleryImage']
     )->name('dogs.removeGalleryImage');

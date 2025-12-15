@@ -13,7 +13,7 @@ class DogController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','is_admin']);
+        $this->middleware(['auth','admin']);
     }
 
     public function index()
@@ -34,6 +34,8 @@ class DogController extends Controller
             'name' => 'required|string|max:255',
             'slug' => ['nullable','string','max:255', Rule::unique('dogs','slug')],
             'breed_id' => 'nullable|exists:dog_breeds,id',
+            'is_mix' => 'sometimes|boolean',
+            'mix_breed_id' => 'nullable|exists:dog_breeds,id',
             'age_months' => 'nullable|integer|min:0',
             'gender' => 'nullable|in:male,female,unknown',
             'color' => 'nullable|string|max:50',
@@ -44,8 +46,16 @@ class DogController extends Controller
             'vaccinated' => 'sometimes|boolean',
             'sterilized' => 'sometimes|boolean',
             'status' => 'required|in:available,adopted,fostered,pending',
-            'location' => 'nullable|string|max:255',
         ]);
+
+        $data['is_mix'] = $request->boolean('is_mix');
+
+        // Prevent same breed for mix or mix without flag
+        if (! $data['is_mix']) {
+            $data['mix_breed_id'] = null;
+        } elseif (!empty($data['mix_breed_id']) && $data['mix_breed_id'] == $data['breed_id']) {
+            return back()->withErrors(['mix_breed_id' => 'Choose a different second breed.'])->withInput();
+        }
 
         if ($request->hasFile('main_image')) {
             $data['main_image'] = $request->file('main_image')->store('dogs/main', 'public');
@@ -73,7 +83,7 @@ class DogController extends Controller
 
     public function show(Dog $dog)
     {
-        $dog->load('breed');
+        $dog->load(['breed','mixBreed']);
         return view('admin.dogs.show', compact('dog'));
     }
 
@@ -89,6 +99,8 @@ class DogController extends Controller
             'name' => 'required|string|max:255',
             'slug' => ['nullable','string','max:255', Rule::unique('dogs','slug')->ignore($dog->id)],
             'breed_id' => 'nullable|exists:dog_breeds,id',
+            'is_mix' => 'sometimes|boolean',
+            'mix_breed_id' => 'nullable|exists:dog_breeds,id',
             'age_months' => 'nullable|integer|min:0',
             'gender' => 'nullable|in:male,female,unknown',
             'color' => 'nullable|string|max:50',
@@ -99,8 +111,15 @@ class DogController extends Controller
             'vaccinated' => 'sometimes|boolean',
             'sterilized' => 'sometimes|boolean',
             'status' => 'required|in:available,adopted,fostered,pending',
-            'location' => 'nullable|string|max:255',
         ]);
+
+        $data['is_mix'] = $request->boolean('is_mix');
+
+        if (! $data['is_mix']) {
+            $data['mix_breed_id'] = null;
+        } elseif (!empty($data['mix_breed_id']) && $data['mix_breed_id'] == $data['breed_id']) {
+            return back()->withErrors(['mix_breed_id' => 'Choose a different second breed.'])->withInput();
+        }
 
         if ($request->hasFile('main_image')) {
             if ($dog->main_image && Storage::disk('public')->exists($dog->main_image)) {
