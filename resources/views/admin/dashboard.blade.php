@@ -19,7 +19,6 @@
             <strong>Welcome, {{ Auth::user()->name }}!</strong> You are logged in as an administrator.
         </div>
 
-        <!-- cards omitted for brevity (keep your existing cards) -->
 
         @if(session('success'))
             <div style="background:#ecfdf3; border:1px solid #bbf7d0; color:#166534; padding:1rem; border-radius:10px; margin-bottom:1rem;">
@@ -59,12 +58,6 @@
                     </a>
                     <a href="{{ route('admin.dogs.index') }}" style="background:#2563eb; color:white; padding:0.5rem 1rem; border-radius:8px; border:none; cursor:pointer; text-decoration:none; display:inline-block;">
                         Manage Dogs
-                    </a>
-                    <a href="{{ route('admin.cat-breeds.index') }}" style="background:#111827; color:white; padding:0.5rem 1rem; border-radius:8px; border:none; cursor:pointer; text-decoration:none; display:inline-block;">
-                        Manage Cat Breeds
-                    </a>
-                    <a href="{{ route('admin.cats.index') }}" style="background:#2563eb; color:white; padding:0.5rem 1rem; border-radius:8px; border:none; cursor:pointer; text-decoration:none; display:inline-block;">
-                        Manage Cats
                     </a>
                 </div>
             </div>

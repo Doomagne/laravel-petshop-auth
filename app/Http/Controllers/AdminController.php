@@ -25,8 +25,6 @@ class AdminController extends Controller
      */
     public function index()
     {
-        // Load dogs/cats and their breeds for the dashboard
-        // Use different paginator page names to avoid collisions on the same page
         $dogs = Dog::with(['breed','mixBreed'])->orderBy('created_at', 'desc')->paginate(10, ['*'], 'dogs_page');
         $cats = Cat::with(['breed','mixBreed'])->orderBy('created_at', 'desc')->paginate(10, ['*'], 'cats_page');
 
@@ -45,7 +43,6 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255', Rule::unique('dog_breeds', 'name')],
         ]);
 
-        // Generate a unique slug based on the name
         $baseSlug = Str::slug($data['name']);
         $slug = $baseSlug;
         $i = 1;

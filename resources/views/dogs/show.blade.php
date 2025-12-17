@@ -32,7 +32,7 @@
                     @endif
 
                     @if($isFavorited)
-                        <form method="POST" action="{{ route('favorites.destroy', ['dog' => $dog->slug]) }}">
+                        <form method="POST" action="{{ route('favorites.dogs.destroy', ['dog' => $dog->slug]) }}">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
@@ -41,7 +41,7 @@
                             </button>
                         </form>
                     @else
-                        <form method="POST" action="{{ route('favorites.store', ['dog' => $dog->slug]) }}">
+                        <form method="POST" action="{{ route('favorites.dogs.store', ['dog' => $dog->slug]) }}">
                             @csrf
                             <button type="submit"
                                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 font-semibold transition">

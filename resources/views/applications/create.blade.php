@@ -18,7 +18,7 @@
                     </a>
                     <a href="{{ route('applications.index') }}"
                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition text-gray-800">
-                        <span>📝</span><span>My Applications</span>
+                        <span>My Applications</span>
                     </a>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                 <div class="flex flex-wrap gap-3 pt-2">
                     <button type="submit"
                             class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2">
-                        <span>📝</span><span>Submit Application</span>
+                        <span>Submit Application</span>
                     </button>
                     <a href="{{ route('dogs.show', ['dog' => $dog->slug]) }}"
                        class="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2 border border-gray-200">
@@ -94,6 +94,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

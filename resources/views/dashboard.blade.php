@@ -23,18 +23,16 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-1">Browse Dogs</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-1">Browse Pets</h2>
                     <p class="text-gray-600">See all dog profiles posted by the admin (read-only).</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('dogs.index') }}"
                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2">
-                        <span>🐾</span>
                         <span>View Dogs</span>
                     </a>
                     <a href="{{ route('cats.index') }}"
                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2">
-                        <span>🐱</span>
                         <span>View Cats</span>
                     </a>
                     <a href="{{ route('favorites.index') }}"
@@ -44,7 +42,6 @@
                     </a>
                     <a href="{{ route('applications.index') }}"
                        class="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2 border border-gray-200">
-                        <span>📝</span>
                         <span>My Applications</span>
                     </a>
                 </div>

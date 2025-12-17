@@ -79,7 +79,7 @@
 
                             <div class="absolute top-3 right-3">
                                 @if(in_array($dog->id, $favoritedDogIds))
-                                    <form method="POST" action="{{ route('favorites.destroy', ['dog' => $dog->slug]) }}">
+                                    <form method="POST" action="{{ route('favorites.dogs.destroy', ['dog' => $dog->slug]) }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -89,7 +89,7 @@
                                         </button>
                                     </form>
                                 @else
-                                    <form method="POST" action="{{ route('favorites.store', ['dog' => $dog->slug]) }}">
+                                    <form method="POST" action="{{ route('favorites.dogs.store', ['dog' => $dog->slug]) }}">
                                         @csrf
                                         <button type="submit"
                                                 class="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-gray-800 shadow flex items-center justify-center transition"

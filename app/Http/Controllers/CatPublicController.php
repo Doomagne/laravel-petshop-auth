@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cat;
 use App\Models\CatBreed;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 
 class CatPublicController extends Controller
@@ -32,15 +33,29 @@ class CatPublicController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        return view('cats.index', compact('cats', 'breeds', 'breedId'));
+        $favoritedCatIds = Favorite::query()
+            ->where('user_id', auth()->id())
+            ->where('favoritable_type', Cat::class)
+            ->whereIn('favoritable_id', $cats->pluck('id'))
+            ->pluck('favoritable_id')
+            ->all();
+
+        return view('cats.index', compact('cats', 'breeds', 'breedId', 'favoritedCatIds'));
     }
 
     public function show(Cat $cat)
     {
         $cat->load(['breed', 'mixBreed']);
-        return view('cats.show', compact('cat'));
+        $isFavorited = Favorite::query()
+            ->where('user_id', auth()->id())
+            ->where('favoritable_type', Cat::class)
+            ->where('favoritable_id', $cat->id)
+            ->exists();
+
+        return view('cats.show', compact('cat', 'isFavorited'));
     }
 }
+
 
 
 

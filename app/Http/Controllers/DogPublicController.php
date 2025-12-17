@@ -17,7 +17,7 @@ class DogPublicController extends Controller
 
     public function index(Request $request)
     {
-        $breed = $request->query('breed'); // dog_breeds.id|null
+        $breed = $request->query('breed');
         $breedId = is_numeric($breed) ? (int) $breed : null;
 
         $breeds = DogBreed::query()->orderBy('name')->get();
@@ -36,8 +36,9 @@ class DogPublicController extends Controller
 
         $favoritedDogIds = Favorite::query()
             ->where('user_id', auth()->id())
-            ->whereIn('dog_id', $dogs->pluck('id'))
-            ->pluck('dog_id')
+            ->where('favoritable_type', Dog::class)
+            ->whereIn('favoritable_id', $dogs->pluck('id'))
+            ->pluck('favoritable_id')
             ->all();
 
         return view('dogs.index', compact('dogs', 'breeds', 'breedId', 'favoritedDogIds'));
@@ -48,7 +49,8 @@ class DogPublicController extends Controller
         $dog->load(['breed', 'mixBreed']);
         $isFavorited = Favorite::query()
             ->where('user_id', auth()->id())
-            ->where('dog_id', $dog->id)
+            ->where('favoritable_type', Dog::class)
+            ->where('favoritable_id', $dog->id)
             ->exists();
 
         $existingApplication = AdoptionApplication::query()

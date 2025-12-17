@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cat;
 use App\Models\Dog;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class FavoriteController extends Controller
 {
@@ -17,32 +19,63 @@ class FavoriteController extends Controller
     {
         $favorites = Favorite::query()
             ->where('user_id', auth()->id())
-            ->with(['dog.breed', 'dog.mixBreed'])
+            ->with([
+                'favoritable' => function (MorphTo $morphTo) {
+                    $morphTo->morphWith([
+                        Dog::class => ['breed', 'mixBreed'],
+                        Cat::class => ['breed', 'mixBreed'],
+                    ]);
+                }
+            ])
             ->latest()
             ->paginate(12);
 
         return view('favorites.index', compact('favorites'));
     }
 
-    public function store(Request $request, Dog $dog)
+    public function storeDog(Request $request, Dog $dog)
     {
         Favorite::firstOrCreate([
             'user_id' => auth()->id(),
-            'dog_id' => $dog->id,
+            'favoritable_type' => Dog::class,
+            'favoritable_id' => $dog->id,
         ]);
 
         return back()->with('success', 'Added to favorites.');
     }
 
-    public function destroy(Request $request, Dog $dog)
+    public function destroyDog(Request $request, Dog $dog)
     {
         Favorite::where('user_id', auth()->id())
-            ->where('dog_id', $dog->id)
+            ->where('favoritable_type', Dog::class)
+            ->where('favoritable_id', $dog->id)
+            ->delete();
+
+        return back()->with('success', 'Removed from favorites.');
+    }
+
+    public function storeCat(Request $request, Cat $cat)
+    {
+        Favorite::firstOrCreate([
+            'user_id' => auth()->id(),
+            'favoritable_type' => Cat::class,
+            'favoritable_id' => $cat->id,
+        ]);
+
+        return back()->with('success', 'Added to favorites.');
+    }
+
+    public function destroyCat(Request $request, Cat $cat)
+    {
+        Favorite::where('user_id', auth()->id())
+            ->where('favoritable_type', Cat::class)
+            ->where('favoritable_id', $cat->id)
             ->delete();
 
         return back()->with('success', 'Removed from favorites.');
     }
 }
+
 
 
 

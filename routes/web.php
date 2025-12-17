@@ -12,8 +12,7 @@ use App\Http\Controllers\CatPublicController;
 Route::get('/', function () {
     return redirect('/login');
 });
-
-// Guest routes (login, register)
+//login
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
@@ -25,7 +24,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register-admin', [AuthController::class, 'registerAdmin'])->name('register-admin.submit');
 });
 
-// Authenticated routes
+// auth
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         $tasks = \App\Models\Task::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
@@ -34,31 +33,33 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // To-Do List Routes
+
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-    // User-facing dog pages (read-only)
+    // dog page
     Route::get('/dogs', [DogPublicController::class, 'index'])->name('dogs.index');
     Route::get('/dogs/{dog:slug}', [DogPublicController::class, 'show'])->name('dogs.show');
 
-    // User-facing cat pages (read-only)
+    // cat page
     Route::get('/cats', [CatPublicController::class, 'index'])->name('cats.index');
     Route::get('/cats/{cat:slug}', [CatPublicController::class, 'show'])->name('cats.show');
 
-    // Favorites (user CRUD)
+    // favorites
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
-    Route::post('/dogs/{dog:slug}/favorite', [FavoriteController::class, 'store'])->name('favorites.store');
-    Route::delete('/dogs/{dog:slug}/favorite', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+    Route::post('/dogs/{dog:slug}/favorite', [FavoriteController::class, 'storeDog'])->name('favorites.dogs.store');
+    Route::delete('/dogs/{dog:slug}/favorite', [FavoriteController::class, 'destroyDog'])->name('favorites.dogs.destroy');
+    Route::post('/cats/{cat:slug}/favorite', [FavoriteController::class, 'storeCat'])->name('favorites.cats.store');
+    Route::delete('/cats/{cat:slug}/favorite', [FavoriteController::class, 'destroyCat'])->name('favorites.cats.destroy');
 
-    // Adoption applications (user)
+    // application 
     Route::get('/applications', [AdoptionApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [AdoptionApplicationController::class, 'show'])->name('applications.show');
     Route::get('/dogs/{dog:slug}/apply', [AdoptionApplicationController::class, 'create'])->name('applications.create');
     Route::post('/dogs/{dog:slug}/apply', [AdoptionApplicationController::class, 'store'])->name('applications.store');
 });
 
-// Admin routes (protected by auth and admin middleware)
+// admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 

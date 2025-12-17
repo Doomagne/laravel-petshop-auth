@@ -12,6 +12,10 @@
                     <p class="text-gray-600 mt-2">Browse all cat profiles posted by the admin. Choose a breed to filter.</p>
                 </div>
                 <div class="flex items-center gap-3">
+                    <a href="{{ route('favorites.index') }}"
+                       class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition text-gray-800">
+                        <span>♥</span><span>My Favorites</span>
+                    </a>
                     <a href="{{ route('dashboard') }}"
                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition text-gray-800">
                         <span>←</span><span>Back to Dashboard</span>
@@ -59,18 +63,42 @@
         @if($cats->count() > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($cats as $cat)
-                    <a href="{{ route('cats.show', ['cat' => $cat->slug]) }}"
-                       class="group bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg hover:-translate-y-0.5 transition">
-                        <div class="h-44 bg-gray-200 overflow-hidden">
-                            @if($cat->main_image_url)
-                                <img src="{{ $cat->main_image_url }}"
-                                     alt="{{ $cat->name }}"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-500">
-                                    No photo
-                                </div>
-                            @endif
+                    <div class="group bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg hover:-translate-y-0.5 transition">
+                        <div class="relative h-44 bg-gray-200 overflow-hidden">
+                            <a href="{{ route('cats.show', ['cat' => $cat->slug]) }}" class="block w-full h-full">
+                                @if($cat->main_image_url)
+                                    <img src="{{ $cat->main_image_url }}"
+                                         alt="{{ $cat->name }}"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-gray-500">
+                                        No photo
+                                    </div>
+                                @endif
+                            </a>
+
+                            <div class="absolute top-3 right-3">
+                                @if(in_array($cat->id, $favoritedCatIds))
+                                    <form method="POST" action="{{ route('favorites.cats.destroy', ['cat' => $cat->slug]) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-red-600 shadow flex items-center justify-center transition"
+                                                title="Remove from favorites">
+                                            ♥
+                                        </button>
+                                    </form>
+                                @else
+                                    <form method="POST" action="{{ route('favorites.cats.store', ['cat' => $cat->slug]) }}">
+                                        @csrf
+                                        <button type="submit"
+                                                class="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-gray-800 shadow flex items-center justify-center transition"
+                                                title="Add to favorites">
+                                            ♡
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="p-4">
@@ -97,10 +125,12 @@
                             </div>
 
                             <div class="mt-4 text-sm font-semibold text-blue-700">
-                                View details →
+                                <a href="{{ route('cats.show', ['cat' => $cat->slug]) }}" class="hover:underline">
+                                    View details →
+                                </a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 @endforeach
             </div>
 
@@ -117,6 +147,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

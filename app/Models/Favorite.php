@@ -11,7 +11,8 @@ class Favorite extends Model
 
     protected $fillable = [
         'user_id',
-        'dog_id',
+        'favoritable_type',
+        'favoritable_id',
     ];
 
     public function user()
@@ -19,11 +20,12 @@ class Favorite extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function dog()
+    public function favoritable()
     {
-        return $this->belongsTo(Dog::class);
+        return $this->morphTo();
     }
 }
+
 
 
 

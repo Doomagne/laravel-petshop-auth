@@ -52,7 +52,12 @@ class User extends Authenticatable
 
     public function favoriteDogs()
     {
-        return $this->belongsToMany(Dog::class, 'favorites')->withTimestamps();
+        return $this->morphedByMany(Dog::class, 'favoritable', 'favorites')->withTimestamps();
+    }
+
+    public function favoriteCats()
+    {
+        return $this->morphedByMany(Cat::class, 'favoritable', 'favorites')->withTimestamps();
     }
 
     public function adoptionApplications()

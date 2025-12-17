@@ -12,6 +12,29 @@
                     <p class="text-gray-600 mt-2">{{ $cat->breed_label }} • {{ $cat->age_label }} • {{ ucfirst($cat->gender ?? 'unknown') }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
+                    @if($isFavorited)
+                        <form method="POST" action="{{ route('favorites.cats.destroy', ['cat' => $cat->slug]) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition">
+                                <span>♥</span><span>Favorited</span>
+                            </button>
+                        </form>
+                    @else
+                        <form method="POST" action="{{ route('favorites.cats.store', ['cat' => $cat->slug]) }}">
+                            @csrf
+                            <button type="submit"
+                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 font-semibold transition">
+                                <span>♡</span><span>Add to Favorites</span>
+                            </button>
+                        </form>
+                    @endif
+
+                    <a href="{{ route('favorites.index') }}"
+                       class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition text-gray-800">
+                        <span>♥</span><span>My Favorites</span>
+                    </a>
                     <a href="{{ route('cats.index') }}"
                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition text-gray-800">
                         <span>←</span><span>Back to Cats</span>
@@ -126,6 +149,7 @@
     </div>
 </div>
 @endsection
+
 
 
 
