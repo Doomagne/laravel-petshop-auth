@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Dog extends Model
+class Cat extends Model
 {
     use HasFactory;
 
@@ -18,33 +19,28 @@ class Dog extends Model
         'gallery' => 'array',
         'vaccinated' => 'boolean',
         'sterilized' => 'boolean',
+        'is_mix' => 'boolean',
     ];
 
     protected static function booted()
     {
-        static::creating(function ($dog) {
-            if (empty($dog->slug)) {
-                $dog->slug = Str::slug($dog->name) . '-' . Str::random(6);
+        static::creating(function ($cat) {
+            if (empty($cat->slug)) {
+                $cat->slug = Str::slug($cat->name) . '-' . Str::random(6);
             }
         });
     }
 
     public function breed()
     {
-        return $this->belongsTo(DogBreed::class, 'breed_id');
+        return $this->belongsTo(CatBreed::class, 'breed_id');
     }
 
     public function mixBreed()
     {
-        return $this->belongsTo(DogBreed::class, 'mix_breed_id');
+        return $this->belongsTo(CatBreed::class, 'mix_breed_id');
     }
 
-    public function adoptionApplications()
-    {
-        return $this->hasMany(AdoptionApplication::class);
-    }
-
-    // URL helpers
     public function getMainImageUrlAttribute()
     {
         return $this->main_image ? asset('storage/' . $this->main_image) : null;
@@ -74,3 +70,6 @@ class Dog extends Model
         return floor($this->age_months / 12) . ' yr ' . ($this->age_months % 12 ? ($this->age_months % 12) . ' mo' : '');
     }
 }
+
+
+

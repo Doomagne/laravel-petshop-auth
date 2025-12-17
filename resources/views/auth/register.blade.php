@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'Register')
+@section('title', 'Admin Registration')
 
 @section('content')
 <div class="auth-card">
     <div class="auth-image">
-        <h2>Join Doomeng Patshop!</h2>
-        <p>Create an account and start shopping for the best pet supplies</p>
+        <h2>Admin Registration</h2>
+        <p>Create an administrator account to access the admin dashboard</p>
     </div>
     
     <div class="auth-form">
         <div class="form-header">
-            <h1>Create YourAccount</h1>
-            <p>Put information here!</p>
+            <h1>Create Admin Account</h1>
+            <p>Fill in the details to register as an administrator</p>
         </div>
 
         @if ($errors->any())
@@ -26,7 +26,13 @@
             </div>
         @endif
 
-        <form action="{{ route('register.submit') }}" method="POST">
+        @if(session('success'))
+            <div style="background: #d4edda; color: #155724; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border: 1px solid #c3e6cb;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <form action="{{ route('register-admin.submit') }}" method="POST">
             @csrf
             
             <div class="form-group">
@@ -53,7 +59,7 @@
                     id="email" 
                     name="email" 
                     value="{{ old('email') }}"
-                    placeholder="you@example.com" 
+                    placeholder="admin@example.com" 
                     required
                     autocomplete="email"
                     class="{{ $errors->has('email') ? 'error' : '' }}"
@@ -64,17 +70,6 @@
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input 
-                    type="tel" 
-                    id="phone" 
-                    name="phone" 
-                    placeholder="+63 912 345 6789" 
-                    autocomplete="tel"
-                >
-            </div>
-
-            <div class="form-group">
                 <label for="password">Password</label>
                 <input 
                     type="password" 
@@ -82,6 +77,7 @@
                     name="password" 
                     placeholder="Create a strong password (min. 6 characters)" 
                     required
+                    minlength="6"
                     autocomplete="new-password"
                     class="{{ $errors->has('password') ? 'error' : '' }}"
                 >
@@ -98,23 +94,12 @@
                     name="password_confirmation" 
                     placeholder="Re-enter your password" 
                     required
+                    minlength="6"
                     autocomplete="new-password"
                 >
             </div>
 
-            <div class="form-group" style="margin-bottom: 1.5rem;">
-                <label style="display: flex; align-items: start; gap: 0.5rem; margin: 0;">
-                    <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }} style="width: auto; margin-top: 0.2rem;">
-                    <span style="font-weight: normal; font-size: 0.9rem;">
-                        I agree to the <a href="#" style="color: #667eea; text-decoration: none;">Terms & Conditions</a> and <a href="#" style="color: #667eea; text-decoration: none;">Privacy Policy</a>
-                    </span>
-                </label>
-                @error('terms')
-                    <span style="color: #e74c3c; font-size: 0.85rem; margin-top: 0.25rem; display: block;">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <button type="submit" class="btn">Create Account</button>
+            <button type="submit" class="btn">Register as Admin</button>
         </form>
 
         <div class="divider">
@@ -122,7 +107,12 @@
         </div>
 
         <div class="form-footer">
-            Already have an account? <a href="{{ url('/login') }}">Sign in instead</a>
+            <p style="margin-bottom: 0.5rem;">
+                Already have an account? <a href="{{ route('login') }}">Login</a>
+            </p>
+            <p style="margin: 0;">
+                Regular user? <a href="{{ route('register') }}">Register here</a>
+            </p>
         </div>
     </div>
 </div>

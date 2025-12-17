@@ -44,4 +44,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'is_admin' => 'boolean',
     ];
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoriteDogs()
+    {
+        return $this->belongsToMany(Dog::class, 'favorites')->withTimestamps();
+    }
+
+    public function adoptionApplications()
+    {
+        return $this->hasMany(AdoptionApplication::class);
+    }
 }

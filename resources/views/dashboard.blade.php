@@ -19,6 +19,38 @@
             </div>
         </div>
 
+        <!-- Browse Dogs -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-1">Browse Dogs</h2>
+                    <p class="text-gray-600">See all dog profiles posted by the admin (read-only).</p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <a href="{{ route('dogs.index') }}"
+                       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2">
+                        <span>🐾</span>
+                        <span>View Dogs</span>
+                    </a>
+                    <a href="{{ route('cats.index') }}"
+                       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2">
+                        <span>🐱</span>
+                        <span>View Cats</span>
+                    </a>
+                    <a href="{{ route('favorites.index') }}"
+                       class="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2 border border-gray-200">
+                        <span>♥</span>
+                        <span>My Favorites</span>
+                    </a>
+                    <a href="{{ route('applications.index') }}"
+                       class="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-2 px-6 rounded-lg transition inline-flex items-center gap-2 border border-gray-200">
+                        <span>📝</span>
+                        <span>My Applications</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- To-Do List Section -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">My To-Do List</h2>
@@ -116,60 +148,6 @@
                 @endif
             </div>
         </div>
-
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Pet Species</h2>
-            @php
-                $species = \App\Models\Pet::distinct()->pluck('species')->filter();
-                $selectedSpecies = request('species');
-            @endphp
-            @if($species->count() > 0)
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    @foreach($species as $specie)
-                        <a href="{{ route('dashboard', ['species' => $specie]) }}"
-                           class="border-2 {{ $selectedSpecies == $specie ? 'border-blue-500 bg-blue-50' : 'border-gray-200' }} rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition text-center">
-                            <h3 class="text-lg font-semibold text-gray-800 hover:text-blue-600">{{ $specie }}</h3>
-                        </a>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-600">No pet species available yet.</p>
-            @endif
-        </div>
-
-        @php
-            $selectedSpecies = request('species');
-        @endphp
-        @if($selectedSpecies)
-            @php
-                $pets = \App\Models\Pet::where('species', $selectedSpecies)->where('is_available', true)->get();
-            @endphp
-            @if($pets->count() > 0)
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Pets - {{ $selectedSpecies }}</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        @foreach($pets as $pet)
-                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition">
-                                <p class="font-medium text-gray-800 text-lg mb-2">{{ $pet->name }}</p>
-                                @if($pet->description)
-                                    <p class="text-sm text-gray-600 mb-2">{{ $pet->description }}</p>
-                                @endif
-                                <p class="text-sm text-gray-600 mb-1"><strong>Breed:</strong> {{ $pet->breed }}</p>
-                                <p class="text-sm text-gray-600 mb-1"><strong>Age:</strong> {{ $pet->age }} years old</p>
-                                <p class="text-lg font-semibold text-blue-600 mb-1">₱{{ number_format($pet->price, 2) }}</p>
-                                <p class="text-xs text-gray-500">Status: {{ $pet->is_available ? 'Available' : 'Not Available' }}</p>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @else
-                <p class="text-gray-600">No pets in this species yet.</p>
-            @endif
-        @else
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="text-gray-600 text-center">Click on a pet species above to view pets.</p>
-            </div>
-        @endif
     </div>
 </div>
 @endsection
